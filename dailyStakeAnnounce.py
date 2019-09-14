@@ -26,7 +26,7 @@ def distribute_rewards():
         u.stake_earned += reward
         u.bal += reward
         # print("user percent of reward : ", percent)
-        newtx = Txs(tid=None, uid=u.uid, sid=0, type="stk",
+        newtx = Txs(tid=None, uid=u.uid, type="stk",
                     amount=float("{0:0.8f}".format(float(reward))), hash=None)
         db.add(newtx)
 
