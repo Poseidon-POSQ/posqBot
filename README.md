@@ -1,0 +1,2 @@
+# posqBot
+POSQ Discord Bot
