@@ -65,7 +65,9 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
             RPC = Connect.RPC()
             tx = RPC.gettransaction(hash)
             confirmations = tx['confirmations']
-
+            if confirmations < 0:
+                confirmed = False
+                confirming = False
             if confirmations >= dep_confs:
                 confirmed = True
                 confirming = False
@@ -117,6 +119,10 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
             RPC = Connect.RPC()
             tx = RPC.gettransaction(hash)
             confirmations = tx['confirmations']
+
+            if confirmations < 0:
+                confirmed = False
+                confirming = False
 
             if confirmations >= stk_confs:
                 confirmed = True
@@ -201,4 +207,5 @@ def check_stake(tx):
 if __name__ == "__main__":
     hash = argv[1]
     check_tx(hash)
+
 
