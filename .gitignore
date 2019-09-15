@@ -2,7 +2,7 @@
 venv/
 env/
 __pycache__/
-
+/posqd
 
 credentials.py
 *.py[cod]
