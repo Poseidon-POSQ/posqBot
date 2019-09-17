@@ -87,7 +87,7 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
 
 
         if transaction == None:
-            transaction = Txs(tid=None, uid=user.uid, sid=0, hash=hash, type="dep", amount=amount, success=1)
+            transaction = Txs(tid=None, uid=user.uid, hash=hash, type="dep", amount=amount, success=1)
             db.add(transaction)
             db.commit()
 
