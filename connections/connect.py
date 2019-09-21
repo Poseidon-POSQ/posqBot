@@ -12,7 +12,8 @@ class Connect:
     def RPC():
         return AuthServiceProxy("http://{0}:{1}@127.0.0.1:{2}".format(environ.get("RPCUSER"),
                                                                       environ.get("RPCPASS"),
-                                                                      environ.get("RPCPORT")))
+                                                                      environ.get("RPCPORT")),
+                                                                        timeout=300)
 
     def db():
         engine = create_engine('mysql+pymysql://{0}:{1}@127.0.0.1/{2}?host=127.0.0.1?port={3}/charset=utf8/'
