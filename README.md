@@ -7,7 +7,7 @@ POSQ Discord Bot
 
 The bot functions as a stake pool and allows for automated deposits, instant withdraws, tips, games (such as dice roll's and coin flips), rains, and donations. 
 
-If you find any issues, contact arkitek#7608 on discord and you may recieve a bounty.
+If you find any issues, contact arkitekt#7608 on discord and you may recieve a bounty.
 
 ## Contribute
 
