@@ -72,6 +72,7 @@ async def stake(ctx, option=None):
     did = ctx.message.author.id
     db = Connect.db()
     title = "POSQ Stake Bot"
+
     if option == None:
         content = "**!stake total** shows your total earned from staking.\n" \
                   "**!stake tx** shows recent stake rewards.\n" \
@@ -87,10 +88,20 @@ async def stake(ctx, option=None):
         await client.say(embed=msg)
 
     elif option == "current":
-        totals = db.query(Counter).first()
-        content = "\nRewards : **{0} POSQ**\nFees : **{1} POSQ**" \
-                  "".format(fullNotation(totals.amount), fullNotation(totals.fee))
-        msg = MSG("Today's Rewards", content)
+        #totals = db.query(Counter).first()
+        now = int(time.time())
+        one_day = now - 60*60*24
+        stakes = db.query(Stakes).filter(Stakes.found_utc>=one_day)
+        count = stakes.count()
+        Stake_Reward=stakes.first().amount
+
+        total_sum = count*Stake_Reward
+        fee = total_sum * 0.05
+        rewards = total_sum - fee
+
+        content = "\nFound : **{0} Blocks**\nRewards : **{1} POSQ**\nFees : **{2} POSQ**" \
+                  "".format(count, fullNotation(rewards), fullNotation(fee))
+        msg = MSG("Last 24 Hours", content)
         await client.say(embed=msg)
 
     elif option == "tx":

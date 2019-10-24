@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
-from sqlalchemy import MetaData, Column, BOOLEAN, VARCHAR, INT, BIGINT,  FLOAT, ForeignKey, Table, collate, REAL
+from sqlalchemy import *
 from sqlalchemy.orm import relationship, join
-from sqlalchemy import Column
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 import time
