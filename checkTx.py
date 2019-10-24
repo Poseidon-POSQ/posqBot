@@ -39,7 +39,7 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
     if confirmations <= 0:
         check_for_stk = db.query(Stakes).filter(Stakes.hash == hash).first()
 
-        if check_for_stk == None:
+        if check_for_stk:
             db.delete(check_for_stk)
             db.commit()
 
