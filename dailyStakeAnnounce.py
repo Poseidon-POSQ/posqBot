@@ -5,20 +5,33 @@ from discord import Client
 import time
 from connections.connect import Connect
 from database.dbModels import *
-now = float(time.time().__round__())
 from os import environ
+from checkTx import check_tx
+now = float(time.time().__round__())
 
+two_days_utc = now - (60*60*48) # 48 hours
 client = Client()
 
 
 def distribute_rewards():
+
     MIN_POSQ_FOR_REWARDS = 5
     db = Connect.db()
-    users = db.query(Users).filter(Users.bal >= MIN_POSQ_FOR_REWARDS).all()
-    count = db.query(Users).filter(Users.bal >= MIN_POSQ_FOR_REWARDS).count()
+
+    txs = db.query(Stakes).filter(Stakes.found_utc>=two_days_utc)\
+        .filter(Stakes.found_utc>0).filter_by(success=0).all()
+
+    for t in txs:
+        check_tx(hash=t.hash, stake=True)
+
+    db.close()
+
+    db = Connect.db()
+
     total_staking = db.query(func.sum(Users.bal))[0][0]
     total_earnings = db.query(Counter).first()
-    #print(users, total_staking)
+
+    users = db.query(Users).filter(Users.bal >= MIN_POSQ_FOR_REWARDS).all()
 
     for u in users:
         percent = u.bal / total_staking
@@ -43,13 +56,9 @@ def distribute_rewards():
     @client.event
     async def on_ready():
         db = Connect.db()
-        count = db.query(Users).filter(Users.bal > 1).count()
+        count = db.query(Users).filter(Users.bal > MIN_POSQ_FOR_REWARDS).count()
         msg = MSG("Today's Stakes", "\n Rewards :  **{0} POSQ** \n Fees : **{1} POSQ** \n Users : **{2}**".format(amount, fee, count))
-        # uncomment for testnet
         await client.send_message(client.get_channel(environ.get("ANN_CHAN")), embed=msg)
-        # uncoment for mainnet
-        #await client.send_message(client.get_channel(environ.get('ANN_CHAN')), embed=msg)
-
         exit(0)
 
     client.run(environ.get("token"))

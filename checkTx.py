@@ -4,7 +4,7 @@ import time
 from database.dbModels import *
 from connections.connect import Connect
 #from util import logger
-
+MIN_POSQ_FOR_REWARDS = 5
 
 def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
 
@@ -37,6 +37,12 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
     confirmations = tx['confirmations']
 
     if confirmations <= 0:
+        check_for_stk = db.query(Stakes).filter(Stakes.hash == hash).first()
+
+        if check_for_stk == None:
+            db.delete(check_for_stk)
+            db.commit()
+
         return False
 
     deposit = check_deposit(tx, hash)
@@ -110,23 +116,22 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
         confirmed = True
 
     if stake and not confirmed:
-        confirming = True
-        while confirming:
+        db = Connect.db()
+        RPC = Connect.RPC()
 
-            print("Stake : {0}  | confirmations : {1} | hash : {2}".format(stake, confirmations, hash))
-            time.sleep(SLEEP_TIME)
+        tx = RPC.gettransaction(hash)
+        amount = float(tx['amount']) + float(tx['fee'])
 
-            RPC = Connect.RPC()
-            tx = RPC.gettransaction(hash)
-            confirmations = tx['confirmations']
+        check_for_stk = db.query(Stakes).filter(Stakes.hash == hash).first()
 
-            if confirmations < 0:
-                confirmed = False
-                confirming = False
+        if check_for_stk == None:
+            user_count = db.query(Users).filter(Users.bal > MIN_POSQ_FOR_REWARDS).count()
+            newTX = Stakes(sid=0, amount=float(amount), hash=hash, nUsers=user_count, success=0, found_utc=int(time.time()))
+            db.add(newTX)
+            db.commit()
+            print("Stake Found : ",  hash)
+        return False
 
-            if confirmations >= stk_confs:
-                confirmed = True
-                confirming = False
 
     if stake and confirmed:
 
@@ -139,8 +144,8 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
         check_for_stk = db.query(Stakes).filter(Stakes.hash==hash).first()
 
         if check_for_stk == None:
-            user_count = db.query(Users).filter(Users.bal > 1).count()
-            newTX = Stakes(sid=0, amount=float(amount), hash=hash, nUsers=user_count, success=1)
+            user_count = db.query(Users).filter(Users.bal > MIN_POSQ_FOR_REWARDS).count()
+            newTX = Stakes(sid=0, amount=float(amount), hash=hash, nUsers=user_count, success=1, found_utc=int(time.time()))
             db.add(newTX)
 
         elif check_for_stk.success == 0:

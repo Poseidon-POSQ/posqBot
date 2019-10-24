@@ -162,10 +162,11 @@ class Stakes(base):
     """
     __tablename__ = "stakes"
     sid = Column(BIGINT, primary_key=True)
-    hash = Column(BIGINT, default=None)
+    hash = Column(VARCHAR, default=None)
     amount = Column(FLOAT, default=0)
     nUsers = Column(BIGINT, default=0)
     success = Column(BOOLEAN, default=0)
+    found_utc = Column(BIGINT, default=0)
 
     def __repr__(self):
         return "<stakes(sid=%s, hash=%s, amount=%s, nUsers=%s)>" % (self.sid, self.hash, self.amount, self.nUsers)
