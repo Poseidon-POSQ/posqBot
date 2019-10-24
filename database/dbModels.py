@@ -147,9 +147,6 @@ class Maturing(base):
     success = Column(BOOLEAN, default=0)
     user = relationship('Users', backref='owner')
 
-
-
-
 class Stakes(base):
     """
     Tracks all stake blocks found by the bot
@@ -162,10 +159,11 @@ class Stakes(base):
     """
     __tablename__ = "stakes"
     sid = Column(BIGINT, primary_key=True)
-    hash = Column(BIGINT, default=None)
+    hash = Column(VARCHAR, default=None)
     amount = Column(FLOAT, default=0)
     nUsers = Column(BIGINT, default=0)
     success = Column(BOOLEAN, default=0)
+    found_utc = Column(BIGINT, default=0)
 
     def __repr__(self):
         return "<stakes(sid=%s, hash=%s, amount=%s, nUsers=%s)>" % (self.sid, self.hash, self.amount, self.nUsers)
