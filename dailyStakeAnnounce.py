@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 from util import MSG
-
 from discord import Client
 import time
 from connections.connect import Connect
@@ -67,4 +66,5 @@ def distribute_rewards():
 
 if __name__ == "__main__":
     distribute_rewards()
+
 

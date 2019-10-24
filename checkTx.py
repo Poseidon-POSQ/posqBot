@@ -212,5 +212,3 @@ def check_stake(tx):
 if __name__ == "__main__":
     hash = argv[1]
     check_tx(hash)
-
-

@@ -147,9 +147,6 @@ class Maturing(base):
     success = Column(BOOLEAN, default=0)
     user = relationship('Users', backref='owner')
 
-
-
-
 class Stakes(base):
     """
     Tracks all stake blocks found by the bot
