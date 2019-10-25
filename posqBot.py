@@ -101,7 +101,7 @@ async def stake(ctx, option=None):
 
         content = "\nFound : **{0} Blocks**\nRewards : **{1} POSQ**\nFees : **{2} POSQ**" \
                   "".format(count, fullNotation(rewards), fullNotation(fee))
-        msg = MSG("Last 24 Hours", content)
+        msg = MSG("Today's Stakes", content)
         await client.say(embed=msg)
 
     elif option == "tx":
