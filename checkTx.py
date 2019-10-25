@@ -43,6 +43,7 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
             db.delete(check_for_stk)
             db.commit()
 
+        db.close()
         return False
 
     deposit = check_deposit(tx, hash)
@@ -102,6 +103,7 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
 
         elif transaction.success == 1:
             print("Deposit was already successful")
+            db.close()
             return False
 
         newTX = Maturing(mid=None, tid=transaction.tid, uid=user.uid, amount=amount, time=time.time().__round__(), success=1)
@@ -130,6 +132,7 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
             db.add(newTX)
             db.commit()
             print("Stake Found : ",  hash)
+        db.close()
         return False
 
 
@@ -153,6 +156,7 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
 
         else:
             print("stk already successfull in db")
+            db.close()
             return False
 
         stake_counter = db.query(Counter).first()
@@ -190,7 +194,7 @@ def check_deposit(tx, hash):
 
         elif check_for_tx.success == 1:
             print("deposit is already successful")
-
+        db.close()
         return False
 
     except Exception as e:

@@ -24,7 +24,6 @@ def distribute_rewards():
         check_tx(hash=t.hash, stake=True)
 
     db.close()
-
     db = Connect.db()
 
     total_staking = db.query(func.sum(Users.bal))[0][0]
@@ -50,6 +49,7 @@ def distribute_rewards():
 
 
     db.commit()
+    db.close()
     print("stake rewards distributed")
 
     @client.event
@@ -58,6 +58,7 @@ def distribute_rewards():
         count = db.query(Users).filter(Users.bal > MIN_POSQ_FOR_REWARDS).count()
         msg = MSG("Today's Stakes", "\n Rewards :  **{0} POSQ** \n Fees : **{1} POSQ** \n Users : **{2}**".format(amount, fee, count))
         await client.send_message(client.get_channel(environ.get("ANN_CHAN")), embed=msg)
+        db.close()
         exit(0)
 
     client.run(environ.get("token"))
