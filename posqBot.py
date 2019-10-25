@@ -91,7 +91,7 @@ async def stake(ctx, option=None):
         #totals = db.query(Counter).first()
         now = int(time.time())
         one_day = now - 60*60*24
-        stakes = db.query(Stakes).filter(Stakes.found_utc>=one_day)
+        stakes = db.query(Stakes).filter(Stakes.found_utc>=one_day).filter_by(sucess=0)
         count = stakes.count()
         Stake_Reward=stakes.first().amount
 
