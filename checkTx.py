@@ -138,9 +138,7 @@ def check_tx(hash=None,stake=False,deposit=False,confirmed=False):
 
     if stake and confirmed:
 
-        db = Connect.db()
         RPC = Connect.RPC()
-
         tx = RPC.gettransaction(hash)
         amount = float(tx['amount']) + float(tx['fee'])
 
@@ -185,11 +183,13 @@ def check_deposit(tx, hash):
         user = db.query(Users).filter(Users.did==did).first()
 
         if user == None:
+            db.close()
             return False
 
         check_for_tx = db.query(Txs).filter(Txs.hash==hash).first()
 
         if check_for_tx == None or check_for_tx.success == 0:
+            db.close()
             return True
 
         elif check_for_tx.success == 1:
@@ -200,6 +200,7 @@ def check_deposit(tx, hash):
     except Exception as e:
         # no deposit address
         # print(e)
+        db.close()
         return False
 
 def check_stake(tx):
