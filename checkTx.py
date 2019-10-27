@@ -200,7 +200,6 @@ def check_deposit(tx, hash):
     except Exception as e:
         # no deposit address
         # print(e)
-        db.close()
         return False
 
 def check_stake(tx):
