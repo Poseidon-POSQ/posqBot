@@ -92,9 +92,13 @@ async def stake(ctx, option=None):
         now = int(time.time())
         one_day = now - 60*60*24
         stakes = db.query(Stakes).filter(Stakes.found_utc>=one_day).filter_by(success=0)
-        count = stakes.count()
-        Stake_Reward=stakes.first().amount
+        if not stakes.first():
+            msg = MSG("Today's Stakes", "No Blocks have been found yet")
+            await client.say(embed=msg)
+            return
 
+        count = stakes.count()
+        Stake_Reward = stakes.first().amount
         total_sum = count*Stake_Reward
         fee = total_sum * 0.05
         rewards = total_sum - fee
